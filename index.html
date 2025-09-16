@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ronny's Server — Comunidad</title>
+  <meta name="description" content="Ronny's Server: comunidad para chatear, jugar y pasarla bien. Eventos, bots, y gente copada. Únete en Discord." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Ronny's Server" />
+  <meta property="og:description" content="Comunidad para chatear, jugar y colaborar. ¡Únete ahora!" />
+  <meta property="og:image" content="logo.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Fuente Friends -->
+  <style>
+    @font-face {
+      font-family: 'FriendsFont';
+      src: url('GABRWFFR.TTF') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    :root { --glass: rgba(31,41,55,0.6); }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; position: relative; min-height: 100vh; }
+    .animated-background{ position: fixed; inset:0; z-index:-2; background: linear-gradient(270deg,#111827,#1f2937,#6b21a8,#2563eb); background-size: 300% 300%; animation: bgAnim 20s ease infinite; }
+    @keyframes bgAnim{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @media (prefers-reduced-motion: reduce){ .animated-background{ animation: none; } }
+    .dark-bottom-gradient{ position:absolute; left:0; right:0; bottom:0; height:50vh; background: linear-gradient(to top, rgba(17,24,39,1), rgba(17,24,39,0)); z-index:-1 }
+    .animate-in{ transform: translateY(12px) scale(0.995); opacity: 0; transition: all 600ms cubic-bezier(.2,.9,.2,1); }
+    .in-view{ transform: none; opacity: 1; }
+    :focus{ outline: 3px solid rgba(99,102,241,0.35); outline-offset: 2px; }
+    h1, h2, h3 { line-height:1.02; text-shadow: 0 0 10px rgba(139,92,246,0.6), 0 0 20px rgba(37,99,235,0.5); }
+    .cta{ box-shadow: 0 10px 30px rgba(15,23,42,0.6) }
+    .skip-link{ position: absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden }
+    .skip-link:focus{ left: 1rem; top:1rem; width:auto; height:auto; padding:.5rem .75rem; background:#111827; color:white; border-radius:.375rem }
+    .logo-text { font-family: 'FriendsFont', sans-serif; font-size: 2rem; font-weight: bold; color: #60a5fa; text-shadow: 0 0 10px rgba(96,165,250,0.8), 0 0 20px rgba(139,92,246,0.6); }
+  </style>
+</head>
+<body class="text-gray-100 antialiased">
+  <a href="#main" class="skip-link">Saltar al contenido principal</a>
+  <div class="animated-background" aria-hidden="true"></div>
+  <div class="dark-bottom-gradient" aria-hidden="true"></div>
+
+  <!-- Navbar y contenido omitido para brevedad... -->
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 py-12 px-6 text-gray-400 border-t border-gray-800 text-center">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-blue-400 mb-4">Ronny's Server</h2>
+      <p class="mb-4">Hecho con ❤️, café y un poco de locura para la comunidad.</p>
+      <p class="text-sm text-gray-500 mb-6">Sí, todavía estamos despiertos a las 3 AM manteniendo este lugar vivo.</p>
+      <div class="flex items-center justify-center gap-6 mb-6">
+        <a href="#rules" class="text-sm hover:text-blue-400 transition-colors">Reglas</a>
+        <a href="#channels" class="text-sm hover:text-blue-400 transition-colors">Canales</a>
+        <a href="https://discord.gg/rqsjUa5naV" class="text-sm hover:text-blue-400 transition-colors" rel="noopener noreferrer" target="_blank">Unirse</a>
+      </div>
+      <p class="text-xs text-gray-600">© 2025 Ronny's Server — No nos hacemos responsables si te envicias con los bots de música 🎵</p>
+    </div>
+  </footer>
+
+  <!-- Botón para controlar animaciones -->
+  <button id="toggle-anim" class="fixed bottom-4 right-4 px-4 py-2 bg-gray-800 text-white text-sm rounded-full shadow-lg hover:bg-gray-700 z-50">
+    Parar animaciones
+  </button>
+
+  <script>
+    (function(){
+      const ioElements = document.querySelectorAll('[data-io]');
+      ioElements.forEach(el => el.classList.add('animate-in'));
+      let io;
+      function initObserver() {
+        if('IntersectionObserver' in window){
+          io = new IntersectionObserver((entries)=>{
+            entries.forEach(entry =>{
+              if(entry.isIntersecting){
+                entry.target.classList.add('in-view');
+                io.unobserve(entry.target);
+              }
+            })
+          },{ threshold: 0.12 });
+          ioElements.forEach(el => io.observe(el));
+        } else {
+          ioElements.forEach(el => el.classList.add('in-view'));
+        }
+      }
+      initObserver();
+
+      const btn = document.getElementById('toggle-anim');
+      const bg = document.querySelector('.animated-background');
+      let animStopped = false;
+
+      btn.addEventListener('click', () => {
+        if (!animStopped) {
+          bg.style.animation = 'none';
+          bg.style.backgroundPosition = '100% 50%';
+          ioElements.forEach(el => {
+            el.classList.remove('animate-in');
+            el.classList.add('in-view');
+          });
+          if (io) io.disconnect();
+          btn.textContent = 'Reactivar animaciones';
+          animStopped = true;
+        } else {
+          bg.style.animation = '';
+          ioElements.forEach(el => {
+            el.classList.remove('in-view');
+            el.classList.add('animate-in');
+          });
+          initObserver();
+          btn.textContent = 'Parar animaciones';
+          animStopped = false;
+        }
+      });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        bg.style.animation = 'none';
+        bg.style.backgroundPosition = '100% 50%';
+        ioElements.forEach(el => {
+          el.classList.remove('animate-in');
+          el.classList.add('in-view');
+        });
+        if (io) io.disconnect();
+        btn.textContent = 'Reactivar animaciones';
+        animStopped = true;
+      }
+    })();
+  </script>
+</body>
+</html>
